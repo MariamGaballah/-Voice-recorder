@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>استديو التسجيل الصوتي | احترافي</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- الهيدر -->
+        <header>
+            <h1><i class="fas fa-microphone-alt"></i> استديو التسجيل الصوتي</h1>
+            <p>سجل صوتك بجودة عالية واستمع إليه لاحقاً</p>
+        </header>
+
+        <!-- بطاقة التحكم الرئيسية -->
+        <div class="recorder-card">
+            <div class="waveform-container">
+                <canvas id="waveform" width="400" height="80"></canvas>
+            </div>
+            
+            <div class="timer" id="timerDisplay">
+                00:00:00
+            </div>
+
+            <div class="controls">
+                <button id="recordBtn" class="btn record-btn">
+                    <i class="fas fa-circle"></i> تسجيل
+                </button>
+                <button id="stopBtn" class="btn stop-btn" disabled>
+                    <i class="fas fa-stop"></i> إيقاف
+                </button>
+                <button id="playBtn" class="btn play-btn" disabled>
+                    <i class="fas fa-play"></i> تشغيل
+                </button>
+            </div>
+
+            <div class="status" id="statusMsg">
+                جاهز للتسجيل
+            </div>
+        </div>
+
+        <!-- قائمة التسجيلات المحفوظة -->
+        <div class="recordings-section">
+            <h2><i class="fas fa-history"></i> تسجيلاتي</h2>
+            <div id="recordingsList" class="recordings-list">
+                <!-- سيتم عرض التسجيلات هنا ديناميكياً -->
+                <div class="empty-message">
+                    <i class="fas fa-box-open"></i>
+                    <p>لا توجد تسجيلات بعد. ابدأ بالتسجيل الآن!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
