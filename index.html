@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎙️ Voice Recorder Pro - مسجل صوت احترافي</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- JSZip for export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="mic-icon">
+                <i class="fas fa-microphone"></i>
+            </div>
+            <h2>جاري تحميل المسجل الاحترافي...</h2>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-microphone-alt"></i>
+                    <span>Voice Recorder Pro</span>
+                </div>
+                <div class="header-actions">
+                    <button id="settingsBtn" class="btn-icon" title="الإعدادات">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <div class="user-profile" id="userProfile">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="userName">المستخدم</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Recorder Section -->
+        <section class="recorder-section">
+            <div class="recorder-card glass-effect">
+                <div class="recorder-header">
+                    <div class="recorder-title">
+                        <i class="fas fa-microphone"></i>
+                        <h2>مسجل الصوت الاحترافي</h2>
+                    </div>
+                    <div class="recording-status" id="recordingStatus">
+                        <div class="status-indicator" id="statusIndicator"></div>
+                        <span id="statusText">جاهز للتسجيل</span>
+                    </div>
+                </div>
+
+                <div class="recorder-main">
+                    <div class="time-display">
+                        <span id="currentTime">00:00:00</span>
+                        <span class="separator">/</span>
+                        <span id="maxTime">--:--:--</span>
+                    </div>
+
+                    <div class="waveform-container">
+                        <canvas id="waveformCanvas" class="waveform"></canvas>
+                    </div>
+
+                    <div class="recorder-controls">
+                        <button id="recordBtn" class="btn-record" title="اضغط Space لبدء التسجيل">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button id="pauseBtn" class="btn-pause" disabled title="إيقاف مؤقت">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button id="stopBtn" class="btn-stop" disabled title="إيقاف التسجيل">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                        <button id="playBtn" class="btn-play" disabled title="تشغيل آخر تسجيل">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button id="downloadBtn" class="btn-download" disabled title="تحميل آخر تسجيل">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="recorder-footer">
+                    <div class="quality-selector">
+                        <label>الجودة:</label>
+                        <select id="qualitySelect">
+                            <option value="96">منخفضة (96kbps)</option>
+                            <option value="128" selected>متوسطة (128kbps)</option>
+                            <option value="192">عالية (192kbps)</option>
+                        </select>
+                    </div>
+                    <div class="shortcuts-info">
+                        <small>Space = تسجيل | Esc = إغلاق</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recordings Grid -->
+        <section class="recordings-section">
+            <div class="section-header">
+                <h3><i class="fas fa-list"></i> جميع التسجيلات (<span id="recordingsCount">0</span>)</h3>
+                <div class="section-controls">
+                    <input type="text" id="searchInput" placeholder="🔍 البحث في التسجيلات...">
+                    <button id="clearAllBtn" class="btn-danger-outline" title="حذف جميع التسجيلات">
+                        <i class="fas fa-trash"></i> حذف الكل
+                    </button>
+                    <button id="exportAllBtn" class="btn-success-outline" title="تصدير كل التسجيلات">
+                        <i class="fas fa-file-archive"></i> تصدير الكل
+                    </button>
+                </div>
+            </div>
+
+            <div class="recordings-grid" id="recordingsGrid">
+                <!-- Recordings will be populated here -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <h4><i class="fas fa-cog"></i> الإعدادات المتقدمة</h4>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <label>اسم المستخدم</label>
+                    <input type="text" id="userNameInput" placeholder="أدخل اسمك هنا...">
+                </div>
+                <div class="setting-item">
+                    <label>الجودة الافتراضية</label>
+                    <select id="defaultQuality">
+                        <option value="96">منخفضة (96kbps)</option>
+                        <option value="128" selected>متوسطة (128kbps)</option>
+                        <option value="192">عالية (192kbps)</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="autoPlay" checked> تشغيل تلقائي بعد التسجيل
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="saveToCloud" checked> حفظ تلقائي (LocalStorage)
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveSettingsBtn" class="btn-primary">💾 حفظ الإعدادات</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Player Modal -->
+    <div id="audioModal" class="modal">
+        <div class="modal-content audio-modal glass-effect">
+            <div class="modal-header">
+                <h4 id="modalTitle">التسجيل</h4>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <audio id="modalPlayer" controls class="full-width"></audio>
+                <div class="audio-actions">
+                    <button id="renameBtn" class="btn-primary-outline">
+                        <i class="fas fa-edit"></i> إعادة تسمية
+                    </button>
+                    <button id="shareBtn" class="btn-success-outline">
+                        <i class="fas fa-share-alt"></i> مشاركة
+                    </button>
+                    <button id="downloadModalBtn" class="btn-primary">
+                        <i class="fas fa-download"></i> تحميل
+                    </button>
+                    <button id="deleteBtn" class="btn-danger">
+                        <i class="fas fa-trash"></i> حذف نهائي
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <h4><i class="fas fa-exclamation-triangle"></i> تأكيد الحذف</h4>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">هل أنت متأكد من حذف هذا التسجيل؟<br>
+                <small>هذا الإجراء لا يمكن التراجع عنه</small></p>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelDelete" class="btn-secondary">❌ إلغاء</button>
+                <button id="confirmDelete" class="btn-danger">🗑️ حذف نهائي</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
