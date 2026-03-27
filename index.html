@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Pro Audio Studio | استديو التسجيل الاحترافي</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loader-container">
+            <div class="audio-wave">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <p>جاري تحميل الاستديو...</p>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="app-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-microphone-alt"></i>
+                        <div class="logo-pulse"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Pro Studio</h1>
+                        <span>احترافي | صوت نقي</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-dashboard">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-headphones"></i>
+                    </div>
+                    <div class="stat-data">
+                        <span class="stat-number" id="totalRecordings">0</span>
+                        <span class="stat-label">تسجيل</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-data">
+                        <span class="stat-number" id="totalDuration">00:00:00</span>
+                        <span class="stat-label">إجمالي المدة</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-data">
+                        <span class="stat-number" id="totalSize">0 MB</span>
+                        <span class="stat-label">المساحة</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-item active" data-view="all">
+                    <i class="fas fa-music"></i>
+                    <span>جميع التسجيلات</span>
+                    <span class="badge" id="allCount">0</span>
+                </button>
+                <button class="nav-item" data-view="favorites">
+                    <i class="fas fa-heart"></i>
+                    <span>المفضلة</span>
+                    <span class="badge" id="favCount">0</span>
+                </button>
+                <button class="nav-item" data-view="recent">
+                    <i class="fas fa-history"></i>
+                    <span>آخر التسجيلات</span>
+                    <span class="badge" id="recentCount">0</span>
+                </button>
+            </nav>
+
+            <div class="storage-info">
+                <div class="storage-header">
+                    <i class="fas fa-hdd"></i>
+                    <span>مساحة التخزين</span>
+                </div>
+                <div class="storage-bar-container">
+                    <div class="storage-bar" id="storageBar"></div>
+                </div>
+                <span class="storage-text" id="storageText">0% مستخدم</span>
+            </div>
+
+            <button class="clear-all-btn" id="clearAllBtn">
+                <i class="fas fa-trash-alt"></i>
+                <span>مسح الكل</span>
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 id="pageTitle">جميع التسجيلات</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="ابحث عن تسجيل...">
+                    </div>
+                    <button class="export-btn" id="exportAllBtn">
+                        <i class="fas fa-download"></i>
+                        <span>تصدير الكل</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Recorder Section - Hero -->
+            <section class="recorder-hero">
+                <div class="recorder-card">
+                    <div class="recorder-header">
+                        <h3>
+                            <i class="fas fa-circle" style="color: #ef4444; font-size: 12px;"></i>
+                            استديو التسجيل الحي
+                        </h3>
+                        <div class="quality-selector">
+                            <label>جودة الصوت:</label>
+                            <select id="qualitySelect">
+                                <option value="high">🎧 عالية (192 kbps)</option>
+                                <option value="medium" selected>🎵 متوسطة (128 kbps)</option>
+                                <option value="low">📻 منخفضة (64 kbps)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Visualizer -->
+                    <div class="visualizer-wrapper">
+                        <canvas id="visualizer" class="visualizer-canvas"></canvas>
+                        <div class="recording-status" id="recordingStatus">
+                            <div class="status-dot"></div>
+                            <span id="statusText">جاهز للتسجيل</span>
+                        </div>
+                    </div>
+
+                    <!-- Timer -->
+                    <div class="timer-container">
+                        <div class="timer-display" id="timerDisplay">
+                            00:00:00
+                        </div>
+                        <div class="timer-label">مدة التسجيل</div>
+                    </div>
+
+                    <!-- Control Buttons -->
+                    <div class="control-buttons">
+                        <button class="ctrl-btn record-btn" id="recordBtn">
+                            <i class="fas fa-microphone"></i>
+                            <span>تسجيل</span>
+                        </button>
+                        <button class="ctrl-btn stop-btn" id="stopBtn" disabled>
+                            <i class="fas fa-stop"></i>
+                            <span>إيقاف</span>
+                        </button>
+                        <button class="ctrl-btn play-btn" id="playLatestBtn" disabled>
+                            <i class="fas fa-play"></i>
+                            <span>تشغيل</span>
+                        </button>
+                        <button class="ctrl-btn save-btn" id="saveBtn" disabled>
+                            <i class="fas fa-save"></i>
+                            <span>حفظ</span>
+                        </button>
+                    </div>
+
+                    <!-- Waveform Preview -->
+                    <div class="waveform-preview" id="waveformPreview" style="display: none;">
+                        <div class="preview-header">
+                            <i class="fas fa-waveform"></i>
+                            <span>معاينة التسجيل</span>
+                        </div>
+                        <canvas id="previewWaveform" class="preview-canvas"></canvas>
+                    </div>
+
+                    <div class="tips-bar">
+                        <i class="fas fa-info-circle"></i>
+                        <span>نصيحة: استخدم سماعات للحصول على أفضل جودة تسجيل</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recordings Section -->
+            <section class="recordings-section">
+                <div class="section-toolbar">
+                    <div class="sort-options">
+                        <span>ترتيب حسب:</span>
+                        <select id="sortSelect">
+                            <option value="date-desc">📅 الأحدث أولاً</option>
+                            <option value="date-asc">📅 الأقدم أولاً</option>
+                            <option value="name-asc">🔤 الاسم (أ-ي)</option>
+                            <option value="name-desc">🔤 الاسم (ي-أ)</option>
+                            <option value="duration-asc">⏱️ المدة (أقصر)</option>
+                            <option value="duration-desc">⏱️ المدة (أطول)</option>
+                        </select>
+                    </div>
+                    <div class="view-options">
+                        <button class="view-btn active" data-view="grid">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                        <button class="view-btn" data-view="list">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="recordingsContainer" class="recordings-container grid-view">
+                    <!-- Dynamic content -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Audio Player Modal -->
+    <div id="playerModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-headphones"></i>
+                    مشغل الصوت الاحترافي
+                </h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="player-artwork">
+                    <i class="fas fa-music"></i>
+                </div>
+                <h4 id="modalTitle" class="modal-title">عنوان التسجيل</h4>
+                <div class="player-waveform-container">
+                    <canvas id="modalWaveform" class="modal-waveform"></canvas>
+                </div>
+                <div class="player-controls">
+                    <button id="modalPrevBtn" class="player-ctrl" disabled>
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button id="modalPlayBtn" class="player-ctrl main-play">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button id="modalNextBtn" class="player-ctrl" disabled>
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                </div>
+                <div class="player-progress">
+                    <span id="modalCurrentTime">00:00</span>
+                    <input type="range" id="modalProgress" value="0" step="0.01">
+                    <span id="modalDuration">00:00</span>
+                </div>
+                <div class="player-actions">
+                    <button id="modalFavoriteBtn" class="modal-action-btn">
+                        <i class="far fa-heart"></i>
+                        <span>المفضلة</span>
+                    </button>
+                    <button id="modalDownloadBtn" class="modal-action-btn">
+                        <i class="fas fa-download"></i>
+                        <span>تحميل</span>
+                    </button>
+                    <button id="modalDeleteBtn" class="modal-action-btn danger">
+                        <i class="fas fa-trash"></i>
+                        <span>حذف</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
